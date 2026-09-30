@@ -4,7 +4,11 @@ import '../styles/app.css';
 import '../styles/editor.css';
 import '../styles/preview.css';
 
+import { inject } from '@vercel/analytics';
 import { App } from './app';
+
+// Initialize Vercel Web Analytics
+inject();
 
 function bootstrap(): void {
   const app = new App();
