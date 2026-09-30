@@ -5,7 +5,7 @@ let highlighterPromise: Promise<HighlighterCore> | null = null;
 async function getHighlighterInstance(): Promise<HighlighterCore> {
   if (!highlighterPromise) {
     highlighterPromise = (async () => {
-      const shiki = await import('shiki');
+      const shiki = await import('shiki/bundle/web');
       return await shiki.createHighlighter({
         themes: ['github-light', 'github-dark'],
         langs: [
@@ -17,14 +17,11 @@ async function getHighlighterInstance(): Promise<HighlighterCore> {
           'markdown',
           'python',
           'bash',
-          'shell',
           'sql',
           'yaml',
           'xml',
           'c',
           'cpp',
-          'rust',
-          'go',
           'java',
         ],
       });
@@ -59,7 +56,7 @@ export async function renderCodeBlocks(container: HTMLElement, isDark: boolean):
 
   try {
     const highlighter = await getHighlighterInstance();
-    const shiki = await import('shiki');
+    const shiki = await import('shiki/bundle/web');
     const themeName = isDark ? 'github-dark' : 'github-light';
 
     for (const wrapper of codeBlocks) {

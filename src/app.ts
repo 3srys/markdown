@@ -59,7 +59,7 @@ export class App {
     initializeIcons();
 
     // 4. Initial Render
-    this.renderNow(appState.getState().content);
+    this.renderNow(appState.getState().content, true);
   }
 
   private onContentChange(content: string): void {
@@ -83,7 +83,7 @@ export class App {
     if (this.statRead) this.statRead.textContent = stats.readingTimeMinutes.toString();
   }
 
-  private async renderNow(content: string): Promise<void> {
+  private async renderNow(content: string, isInitial = false): Promise<void> {
     if (content === this.lastRenderedContent) return;
     this.lastRenderedContent = content;
 
@@ -178,15 +178,27 @@ export class App {
     this.setRenderStatus('rendering');
 
     // Run renderers in parallel for maximum speed on refresh / edit
-    try {
-      await Promise.all([
-        special.hasMath ? renderMathBlocks(this.previewEl) : Promise.resolve(),
-        special.hasMermaid ? renderMermaidDiagrams(this.previewEl, isDark) : Promise.resolve(),
-        special.hasChart ? renderCharts(this.previewEl, isDark) : Promise.resolve(),
-        special.hasCode ? renderCodeBlocks(this.previewEl, isDark) : Promise.resolve(),
-      ]);
-    } finally {
-      this.setRenderStatus('ready');
+    const runAsyncRenderers = async () => {
+      try {
+        await Promise.all([
+          special.hasMath ? renderMathBlocks(this.previewEl) : Promise.resolve(),
+          special.hasMermaid ? renderMermaidDiagrams(this.previewEl, isDark) : Promise.resolve(),
+          special.hasChart ? renderCharts(this.previewEl, isDark) : Promise.resolve(),
+          special.hasCode ? renderCodeBlocks(this.previewEl, isDark) : Promise.resolve(),
+        ]);
+      } finally {
+        this.setRenderStatus('ready');
+      }
+    };
+
+    if (isInitial) {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => runAsyncRenderers(), { timeout: 1200 });
+      } else {
+        setTimeout(runAsyncRenderers, 100);
+      }
+    } else {
+      await runAsyncRenderers();
     }
   }
 
