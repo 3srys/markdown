@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" class="no-transition-preload">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('md_live_theme') || 'system';
+          document.documentElement.setAttribute('data-theme', saved);
+        } catch (e) {}
+      })();
+    </script>
+    <!-- SEO Meta Tags -->
+    <title>Free Online Markdown Editor & Live Preview | Markdown Studio</title>
+    <meta name="description" content="A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js. Export to HTML or PDF. Hosted at markdown.srys.me." />
+    <meta name="keywords" content="markdown editor, online markdown, live preview, markdown viewer, mermaid js editor, katex editor, markdown to html, web markdown tool, github flavored markdown" />
+    <meta name="author" content="srys.me" />
+    <link rel="canonical" href="https://markdown.srys.me/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://markdown.srys.me/" />
+    <meta property="og:title" content="Free Online Markdown Editor & Live Preview | Markdown Studio" />
+    <meta property="og:description" content="A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js." />
+    <meta property="og:image" content="https://markdown.srys.me/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://markdown.srys.me/" />
+    <meta property="twitter:title" content="Free Online Markdown Editor & Live Preview | Markdown Studio" />
+    <meta property="twitter:description" content="A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js." />
+    <meta property="twitter:image" content="https://markdown.srys.me/og-image.jpg" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Markdown Studio",
+      "url": "https://markdown.srys.me/",
+      "description": "A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      }
+    }
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/themes.css" />
+    <link rel="stylesheet" href="/styles/app.css" />
+    <link rel="stylesheet" href="/styles/editor.css" />
+    <link rel="stylesheet" href="/styles/preview.css" />
+  </head>
+  <body data-view="split">
+    <script>
+      (function() {
+        try {
+          var t = document.documentElement.getAttribute('data-theme') || 'system';
+          document.body.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo-wrapper">
+          <svg class="brand-icon" width="28" height="28" style="width:28px;height:28px;min-width:28px;max-width:28px;display:block;" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1a7f72" />
+                <stop offset="100%" stop-color="#2d6a4f" />
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="7" fill="url(#brand-grad)"/>
+            <path d="M6 21V11h3.5l3 4.5 3-4.5H19v10h-2.5v-6l-3 4.5-3-4.5v6H6zm15-4h2V11h2.5v6H28l-3.5 4-3.5-4z" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="brand-text-container">
+          <span class="brand-title">Markdown Live</span>
+          <span class="brand-badge">STUDIO</span>
+        </div>
+      </div>
+
+      <!-- Desktop View Switcher -->
+      <div class="btn-group desktop-view-tabs" role="tablist" aria-label="Layout View">
+        <button id="view-split" class="btn active" title="Split View (Ctrl+Alt+S)" aria-label="Split View">
+          <i data-lucide="columns-2"></i>
+          <span class="btn-label">Split</span>
+        </button>
+        <button id="view-editor" class="btn" title="Editor Only" aria-label="Editor Only">
+          <i data-lucide="edit-3"></i>
+          <span class="btn-label">Editor</span>
+        </button>
+        <button id="view-preview" class="btn" title="Preview Only" aria-label="Preview Only">
+          <i data-lucide="eye"></i>
+          <span class="btn-label">Preview</span>
+        </button>
+      </div>
+
+      <!-- Mobile View Switcher (visible on mobile screens) -->
+      <div class="btn-group mobile-view-tabs" role="tablist" aria-label="View Mode">
+        <button id="tab-editor" class="btn active" role="tab" aria-selected="true" aria-controls="editor-pane">Editor</button>
+        <button id="tab-preview" class="btn" role="tab" aria-selected="false" aria-controls="preview-pane">Preview</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <button id="btn-new" class="btn" title="New Blank Document" aria-label="New Document">
+          <i data-lucide="file-plus"></i>
+          <span class="btn-label">New</span>
+        </button>
+
+        <button id="btn-reset" class="btn" title="Reset to Sample Guide" aria-label="Reset Editor">
+          <i data-lucide="rotate-ccw"></i>
+          <span class="btn-label">Reset</span>
+        </button>
+
+        <button id="btn-open" class="btn" title="Open File" aria-label="Open File">
+          <i data-lucide="folder-open"></i>
+          <span class="btn-label">Open</span>
+        </button>
+        <input type="file" id="file-input" accept=".md,.markdown,.txt" style="display: none;" aria-hidden="true" />
+
+        <!-- Export Dropdown -->
+        <div class="dropdown" id="export-dropdown">
+          <button class="btn btn-primary" id="btn-export-toggle" aria-haspopup="true" aria-expanded="false" title="Export &amp; Share">
+            <i data-lucide="download"></i>
+            <span class="btn-label">Export</span>
+            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu" id="export-menu" role="menu">
+            <button class="dropdown-item" id="btn-export-md" role="menuitem">
+              <i data-lucide="file-down"></i>
+              <span>Export Markdown (.md)</span>
+            </button>
+            <button class="dropdown-item" id="btn-export-html" role="menuitem">
+              <i data-lucide="code"></i>
+              <span>Export HTML (.html)</span>
+            </button>
+            <button class="dropdown-item" id="btn-print-pdf" role="menuitem">
+              <i data-lucide="printer"></i>
+              <span>Print / PDF</span>
+            </button>
+            <hr class="dropdown-divider" />
+            <button class="dropdown-item" id="btn-copy-md" role="menuitem">
+              <i data-lucide="copy"></i>
+              <span>Copy Markdown</span>
+            </button>
+            <button class="dropdown-item" id="btn-copy-html" role="menuitem">
+              <i data-lucide="clipboard-copy"></i>
+              <span>Copy HTML</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="btn-theme" class="btn btn-icon" title="Toggle Theme (System / Light / Dark)" aria-label="Toggle Theme">
+          <i data-lucide="sun"></i>
+        </button>
+
+        <button id="btn-zen" class="btn btn-icon" title="Zen Mode (Ctrl+Shift+F)" aria-label="Toggle Zen Mode">
+          <i data-lucide="maximize-2"></i>
+        </button>
+
+        <button id="btn-shortcuts" class="btn btn-icon" title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">
+          <i data-lucide="help-circle"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Formatting Toolbar -->
+    <section class="app-toolbar" aria-label="Formatting Toolbar">
+      <div class="toolbar-group">
+        <button class="btn btn-icon" data-format="bold" title="Bold (Ctrl+B)" aria-label="Bold"><i data-lucide="bold"></i></button>
+        <button class="btn btn-icon" data-format="italic" title="Italic (Ctrl+I)" aria-label="Italic"><i data-lucide="italic"></i></button>
+        <button class="btn btn-icon" data-format="strikethrough" title="Strikethrough" aria-label="Strikethrough"><i data-lucide="strikethrough"></i></button>
+      </div>
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group">
+        <button class="btn btn-icon" data-format="heading" title="Heading" aria-label="Heading"><i data-lucide="heading"></i></button>
+        <button class="btn btn-icon" data-format="quote" title="Quote" aria-label="Quote"><i data-lucide="quote"></i></button>
+        <button class="btn btn-icon" data-format="code" title="Code Block" aria-label="Code Block"><i data-lucide="code-2"></i></button>
+      </div>
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group">
+        <button class="btn btn-icon" data-format="ul" title="Bullet List" aria-label="Bullet List"><i data-lucide="list"></i></button>
+        <button class="btn btn-icon" data-format="ol" title="Ordered List" aria-label="Ordered List"><i data-lucide="list-ordered"></i></button>
+        <button class="btn btn-icon" data-format="task" title="Task List" aria-label="Task List"><i data-lucide="check-square"></i></button>
+      </div>
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group">
+        <button class="btn btn-icon" data-format="link" title="Link (Ctrl+K)" aria-label="Link"><i data-lucide="link"></i></button>
+        <button class="btn btn-icon" data-format="image" title="Image" aria-label="Image"><i data-lucide="image"></i></button>
+        <button class="btn btn-icon" data-format="table" title="Table" aria-label="Table"><i data-lucide="table"></i></button>
+        <button class="btn btn-icon" data-format="hr" title="Horizontal Rule" aria-label="Horizontal Rule"><i data-lucide="minus"></i></button>
+      </div>
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group">
+        <button class="btn btn-icon" data-format="math" title="Math Formula ($...$)" aria-label="Math Formula"><i data-lucide="sigma"></i></button>
+        <button class="btn btn-icon" data-format="mermaid" title="Mermaid Diagram" aria-label="Mermaid Diagram"><i data-lucide="git-fork"></i></button>
+        <button class="btn btn-icon" data-format="chart" title="Chart Visualization" aria-label="Chart Visualization"><i data-lucide="bar-chart-2"></i></button>
+      </div>
+    </section>
+
+    <!-- Main Workspace Container -->
+    <main class="main-container" id="main-container">
+      <!-- Editor Pane -->
+      <section class="pane editor-pane" id="editor-pane" aria-label="Markdown Editor">
+        <div class="editor-container">
+          <div class="line-numbers" id="line-numbers" aria-hidden="true">1</div>
+          <textarea
+            id="editor"
+            class="editor-textarea"
+            placeholder="Type or paste Markdown here..."
+            spellcheck="true"
+            aria-label="Markdown Source Text"
+          ></textarea>
+          <div class="drop-overlay" id="drop-overlay">
+            <i data-lucide="upload-cloud" class="drop-icon"></i>
+            <span class="drop-overlay-text">Drop Markdown file here</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Split Gutter (Desktop) -->
+      <div class="gutter" id="gutter" title="Drag to resize panes" role="separator" aria-orientation="vertical" tabindex="0">
+        <div class="gutter-handle-bar"></div>
+      </div>
+
+      <!-- Preview Pane -->
+      <section class="pane preview-pane" id="preview-pane" aria-label="Rendered Preview">
+        <div class="preview-container" id="preview-container">
+          <article class="markdown-body" id="preview"></article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="app-statusbar">
+      <div class="status-left">
+        <span class="status-item status-pill"><i data-lucide="type" class="status-icon"></i> <strong id="stat-words">0</strong> words</span>
+        <span class="status-sep">•</span>
+        <span class="status-item"><strong id="stat-chars">0</strong> chars</span>
+        <span class="status-sep">•</span>
+        <span class="status-item"><strong id="stat-read">0</strong> min read</span>
+        <span class="status-sep">•</span>
+        <span class="status-item status-cursor" id="stat-cursor" title="Cursor Line and Column">Ln <strong id="stat-ln">1</strong>, Col <strong id="stat-col">1</strong></span>
+      </div>
+      <div class="status-right">
+        <button id="btn-wrap" class="status-btn" title="Toggle word wrapping" aria-pressed="true">
+          Wrap: On
+        </button>
+        <button id="btn-sync-scroll" class="status-btn active" title="Toggle scroll synchronization" aria-pressed="true">
+          <span class="sync-dot"></span> Sync Scroll: On
+        </button>
+        <span class="status-badge live-pulse">
+          <span class="pulse-dot"></span> Local
+        </span>
+      </div>
+    </footer>
+
+    <!-- Shortcuts Modal -->
+    <div class="modal-backdrop" id="shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="modal-shortcuts-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-shortcuts-title">Keyboard Shortcuts</h2>
+          <button class="btn btn-icon" id="btn-close-modal" aria-label="Close modal">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="shortcut-table">
+            <tbody>
+              <tr><td>Bold</td><td><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>B</kbd></td></tr>
+              <tr><td>Italic</td><td><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>I</kbd></td></tr>
+              <tr><td>Insert Link</td><td><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>K</kbd></td></tr>
+              <tr><td>Export / Save</td><td><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>S</kbd></td></tr>
+              <tr><td>Zen Mode</td><td><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd></td></tr>
+              <tr><td>Exit Zen Mode</td><td><kbd>Esc</kbd></td></tr>
+              <tr><td>Indentation</td><td><kbd>Tab</kbd></td></tr>
+              <tr><td>Outdentation</td><td><kbd>Shift</kbd> + <kbd>Tab</kbd></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+
