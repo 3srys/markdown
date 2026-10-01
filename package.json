@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "indexnow": "bash scripts/indexnow.sh"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
