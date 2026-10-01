@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
+    "abcjs": "^6.7.1",
     "chart.js": "^4.4.4",
     "dompurify": "^3.1.6",
     "katex": "^0.16.11",
@@ -20,13 +21,16 @@
     "markdown-it-sup": "^2.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "mermaid": "^10.9.1",
-    "shiki": "^1.18.0"
+    "plantuml-encoder": "^1.4.0",
+    "shiki": "^1.18.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",
     "@types/katex": "^0.16.7",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^20.14.0",
+    "@types/plantuml-encoder": "^1.4.2",
     "sharp": "^0.35.5",
     "typescript": "^5.5.4",
     "vite": "^5.4.2"

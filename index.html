@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
     <script>
       (function() {
         try {
@@ -12,24 +13,24 @@
       })();
     </script>
     <!-- SEO Meta Tags -->
-    <title>Free Online Markdown Editor & Live Preview | Markdown Studio</title>
-    <meta name="description" content="A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js. Export to HTML or PDF. Hosted at markdown.srys.me." />
-    <meta name="keywords" content="markdown editor, online markdown, live preview, markdown viewer, mermaid js editor, katex editor, markdown to html, web markdown tool, github flavored markdown" />
+    <title>Markdown Live | Free Markdown Online Editor, Viewer & Live Preview</title>
+    <meta name="description" content="Write markdown online with Markdown Live, a fast, free, local-first client-side editor. Experience instant live preview, GFM, Markdown Viewer, syntax highlighting, Mermaid, KaTeX, and export to HTML." />
+    <meta name="keywords" content="markdown online, markdown live, markdown viewer, local-first markdown, online markdown editor, markdown editor, live markdown, markdown live preview, markdown to html, GFM, commonmark" />
     <meta name="author" content="srys.me" />
     <link rel="canonical" href="https://markdown.srys.me/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://markdown.srys.me/" />
-    <meta property="og:title" content="Free Online Markdown Editor & Live Preview | Markdown Studio" />
-    <meta property="og:description" content="A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js." />
+    <meta property="og:title" content="Markdown Live | Free Markdown Online Editor & Viewer" />
+    <meta property="og:description" content="Write markdown online and experience instant live preview with this fast, local-first free Markdown editor and viewer." />
     <meta property="og:image" content="https://markdown.srys.me/og-image.jpg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://markdown.srys.me/" />
-    <meta property="twitter:title" content="Free Online Markdown Editor & Live Preview | Markdown Studio" />
-    <meta property="twitter:description" content="A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js." />
+    <meta property="twitter:title" content="Markdown Live | Free Markdown Online Editor & Viewer" />
+    <meta property="twitter:description" content="Write markdown online and experience instant live preview with this fast, local-first free Markdown editor and viewer." />
     <meta property="twitter:image" content="https://markdown.srys.me/og-image.jpg" />
 
     <!-- Structured Data (JSON-LD) -->
@@ -37,9 +38,9 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Markdown Studio",
+      "name": "Markdown Live",
       "url": "https://markdown.srys.me/",
-      "description": "A fast, client-side, distraction-free Markdown editor with live preview, syntax highlighting, Mermaid diagrams, KaTeX math, and Chart.js.",
+      "description": "Write markdown online using Markdown Live, a fast, local-first, free client-side Markdown Viewer and Editor featuring instant live preview and rich syntax support.",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "All",
       "offers": {
@@ -212,7 +213,8 @@
 
       <div class="toolbar-group">
         <button class="btn btn-icon" data-format="math" title="Math Formula ($...$)" aria-label="Math Formula"><i data-lucide="sigma"></i></button>
-        <button class="btn btn-icon" data-format="mermaid" title="Mermaid Diagram" aria-label="Mermaid Diagram"><i data-lucide="git-fork"></i></button>
+        <button class="btn btn-icon" id="btn-diagram-modal" title="Insert Diagram / Template" aria-label="Insert Diagram"><i data-lucide="shapes"></i></button>
+        <button class="btn btn-icon" data-format="mermaid" title="Mermaid Flowchart" aria-label="Mermaid Diagram"><i data-lucide="git-fork"></i></button>
         <button class="btn btn-icon" data-format="chart" title="Chart Visualization" aria-label="Chart Visualization"><i data-lucide="bar-chart-2"></i></button>
       </div>
     </section>
@@ -245,7 +247,19 @@
       <!-- Preview Pane -->
       <section class="pane preview-pane" id="preview-pane" aria-label="Rendered Preview">
         <div class="preview-container" id="preview-container">
-          <article class="markdown-body" id="preview"></article>
+          <article class="markdown-body" id="preview">
+            <h1>Markdown Live</h1>
+            <p>Welcome to <strong>Markdown Live</strong>, the best way to write <strong>markdown online</strong> for free. Experience a fast, reliable, and instant <strong>Markdown live preview</strong> and <strong>Markdown viewer</strong> right in your browser.</p>
+            <h2>Local-First Markdown Online Features</h2>
+            <ul>
+              <li><strong>Instant Live Preview & Split View</strong>: See your text convert from Markdown to HTML in real-time as you type, or switch to full preview.</li>
+              <li><strong>Secure, Local-First Online Markdown Editor</strong>: Everything runs locally. Your Markdown workspace stays on your device.</li>
+              <li><strong>Rich Markdown Viewer</strong>: Fully supports CommonMark, GitHub Flavored Markdown (GFM), tables, checklists, footnotes, alerts, and Shiki code syntax highlighting.</li>
+              <li><strong>Advanced Rendering</strong>: Native support for Mermaid diagrams, KaTeX / MathJax math rendering, and Chart.js visualizations.</li>
+              <li><strong>Export Markdown to HTML</strong>: Write in Markdown and instantly export to HTML or print to PDF.</li>
+            </ul>
+            <p>Whether you need a quick <strong>live Markdown</strong> test, a powerful <strong>Markdown viewer</strong>, or a full-featured workspace to write <strong>markdown online</strong>, just start typing in the editor pane to see your formatting rendered live!</p>
+          </article>
         </div>
       </section>
     </main>
@@ -296,6 +310,30 @@
               <tr><td>Outdentation</td><td><kbd>Shift</kbd> + <kbd>Tab</kbd></td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram Templates Modal -->
+    <div class="modal-backdrop" id="diagram-modal" role="dialog" aria-modal="true" aria-labelledby="modal-diagram-title">
+      <div class="modal-card diagram-modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-diagram-title">Insert Diagram</h2>
+          <button class="btn btn-icon" id="btn-close-diagram-modal" aria-label="Close modal">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body diagram-modal-body">
+          <aside class="diagram-sidebar">
+            <nav class="diagram-nav" id="diagram-nav">
+              <!-- Populated via JS -->
+            </nav>
+          </aside>
+          <div class="diagram-content">
+            <div class="diagram-grid" id="diagram-grid">
+              <!-- Populated via JS -->
+            </div>
+          </div>
         </div>
       </div>
     </div>

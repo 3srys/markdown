@@ -531,6 +531,147 @@ body[data-view="preview"] .gutter {
   }
 }
 
+
+/* ───── Custom Dialog System ───── */
+.custom-dialog-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(9, 13, 22, 0);
+  backdrop-filter: blur(0px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, backdrop-filter 0.2s ease;
+}
+.custom-dialog-backdrop--visible {
+  display: flex;
+}
+.custom-dialog-backdrop--show {
+  background-color: rgba(9, 13, 22, 0.65);
+  backdrop-filter: blur(6px);
+}
+.custom-dialog-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  width: min(420px, 90vw);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  transform: scale(0.92) translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.custom-dialog-card--enter {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+.custom-dialog-card--exit {
+  opacity: 0;
+  transform: scale(0.94) translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.custom-dialog-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.custom-dialog-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.custom-dialog-icon--confirm {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.custom-dialog-icon--alert {
+  background: rgba(234, 179, 8, 0.12);
+  color: #ca8a04;
+}
+.custom-dialog-icon--danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+.custom-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.custom-dialog-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.custom-dialog-message {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.55;
+  opacity: 1;
+}
+.custom-dialog-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.custom-dialog-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+.custom-dialog-btn:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.custom-dialog-btn--cancel {
+  background: var(--bg-active);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+.custom-dialog-btn--cancel:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+.custom-dialog-btn--confirm {
+  background: var(--accent);
+  color: #fff;
+}
+.custom-dialog-btn--confirm:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.custom-dialog-btn--danger {
+  background: #ef4444;
+  color: #fff;
+}
+.custom-dialog-btn--danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+.custom-dialog-btn--ok {
+  background: var(--accent);
+  color: #fff;
+}
+.custom-dialog-btn--ok:hover {
+  background: var(--accent-hover);
+}
+
 /* Modal */
 .modal-backdrop {
   display: none;
@@ -800,8 +941,7 @@ body.zen-mode .zen-exit-hint {
 @media (max-width: 520px) {
   /* On very small screens, hide secondary buttons so header never clips */
   #btn-zen,
-  #btn-shortcuts,
-  #btn-reset {
+  #btn-shortcuts {
     display: none !important;
   }
 
@@ -819,5 +959,126 @@ body.zen-mode .zen-exit-hint {
   }
 }
 
-
-
+/* Diagram Modal Styles */
+.diagram-modal-card {
+  max-width: 800px;
+  width: 90%;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+}
+.diagram-modal-body {
+  display: flex;
+  flex: 1;
+  padding: 0;
+  overflow: hidden;
+}
+.diagram-sidebar {
+  width: 220px;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  overflow-y: auto;
+  padding: 12px;
+}
+.diagram-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: all var(--transition-fast);
+}
+.diagram-nav-btn i {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+}
+.diagram-nav-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+.diagram-nav-btn.active {
+  background-color: var(--accent-light);
+  color: var(--accent);
+  border-color: rgba(2, 132, 199, 0.2);
+  font-weight: 600;
+}
+.diagram-content {
+  flex: 1;
+  background-color: var(--bg-app);
+  overflow-y: auto;
+  padding: 20px;
+}
+.diagram-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+.diagram-template-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.diagram-template-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-subtle);
+}
+.diagram-preview-mockup {
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-app) 100%);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  height: 110px;
+  overflow: hidden;
+  padding: 8px;
+  color: var(--accent);
+  transition: border-color var(--transition-fast);
+}
+.diagram-template-card:hover .diagram-preview-mockup {
+  border-color: var(--accent);
+}
+.diagram-preview-mockup svg {
+  width: 100%;
+  height: 100%;
+}
+.diagram-template-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: left;
+}
+.btn-insert-diagram {
+  width: 100%;
+  padding: 7px;
+  font-size: 12px;
+  cursor: pointer;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+.btn-insert-diagram:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn-insert-diagram:active {
+  transform: translateY(0);
+}

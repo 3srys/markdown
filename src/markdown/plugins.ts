@@ -192,6 +192,14 @@ export function setupPlugins(md: MarkdownIt): void {
       return `<div class="math-block"${lineAttrs} data-math="${escapeHtml(content)}"><span class="math-raw" style="display:none;">${escapeHtml(content)}</span><div class="math-loading"><span class="loader-spinner-sm"></span><span class="math-preview-text">$$ ${escapeHtml(content)} $$</span></div></div>`;
     }
 
+    if (info === 'plantuml' || info === 'puml') {
+      return `<div class="plantuml-container diagram-container"${lineAttrs} data-plantuml="${escapeHtml(content)}"><pre class="plantuml-raw" style="display:none;">${escapeHtml(content)}</pre><div class="block-loader plantuml-loading"><span class="loader-spinner"></span><span>Rendering PlantUML...</span></div></div>`;
+    }
+
+    if (info === 'abc') {
+      return `<div class="abc-container diagram-container"${lineAttrs} data-abc="${escapeHtml(content)}"><pre class="abc-raw" style="display:none;">${escapeHtml(content)}</pre><div class="block-loader abc-loading"><span class="loader-spinner"></span><span>Rendering Music...</span></div></div>`;
+    }
+
     const langClass = info ? `language-${escapeHtml(info)}` : '';
     return `<div class="code-block-wrapper"${lineAttrs} data-code="${escapeHtml(content)}" data-lang="${escapeHtml(info)}"><button class="code-copy-btn" title="Copy code" aria-label="Copy code">Copy</button><pre><code class="${langClass}">${escapeHtml(content)}</code></pre></div>`;
   };

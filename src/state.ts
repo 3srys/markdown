@@ -84,12 +84,16 @@ class StateManager {
     const hasChart = /```chart\b/i.test(text);
     const hasMath = /\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|```(?:math|katex)\b/i.test(text);
     const hasCode = /```[a-zA-Z0-9_-]+\b/.test(text);
+    const hasPlantUML = /```(?:plantuml|puml)\b/i.test(text);
+    const hasAbc = /```abc\b/i.test(text);
 
     return {
       hasMermaid,
       hasChart,
       hasMath,
       hasCode,
+      hasPlantUML,
+      hasAbc,
     };
   }
 }

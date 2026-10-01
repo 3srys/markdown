@@ -33,6 +33,7 @@ import {
   UploadCloud,
   RotateCcw,
   X,
+  Shapes,
 } from 'lucide';
 import { MarkdownEditor } from '../editor/editor';
 
@@ -72,6 +73,7 @@ export function initializeIcons(): void {
       UploadCloud,
       RotateCcw,
       X,
+      Shapes,
     },
   });
 }

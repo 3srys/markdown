@@ -4,11 +4,15 @@ import { renderCodeBlocks } from './renderers/code';
 import { renderMathBlocks } from './renderers/math';
 import { renderMermaidDiagrams } from './renderers/mermaid';
 import { renderCharts } from './renderers/chart';
+import { renderPlantUML } from './renderers/plantuml';
+import { renderAbc } from './renderers/abc';
 import { appState } from './state';
 import { setupToolbar, initializeIcons } from './ui/toolbar';
 import { isCurrentThemeDark, setupTheme } from './ui/theme';
 import { setupLayout, toggleZenMode } from './ui/layout';
 import { setupFileHandlers, exportMarkdownFile } from './files/files';
+import { setupDiagramToolbars } from './ui/diagram-actions';
+import { setupDiagramModal } from './ui/diagram-modal';
 
 export class App {
   private editor!: MarkdownEditor;
@@ -52,6 +56,7 @@ export class App {
     setupToolbar(this.editor);
     setupLayout();
     setupFileHandlers(this.editor, () => this.previewEl.innerHTML);
+    setupDiagramModal(this.editor);
     this.setupSyncScrollButton();
     this.setupWordWrapButton();
 
@@ -184,8 +189,11 @@ export class App {
           special.hasMath ? renderMathBlocks(this.previewEl) : Promise.resolve(),
           special.hasMermaid ? renderMermaidDiagrams(this.previewEl, isDark) : Promise.resolve(),
           special.hasChart ? renderCharts(this.previewEl, isDark) : Promise.resolve(),
+          special.hasPlantUML ? renderPlantUML(this.previewEl, isDark) : Promise.resolve(),
+          special.hasAbc ? renderAbc(this.previewEl, isDark) : Promise.resolve(),
           special.hasCode ? renderCodeBlocks(this.previewEl, isDark) : Promise.resolve(),
         ]);
+        setupDiagramToolbars(this.previewEl);
       } finally {
         this.setRenderStatus('ready');
       }
@@ -215,8 +223,11 @@ export class App {
     await Promise.all([
       special.hasMermaid ? renderMermaidDiagrams(this.previewEl, isDark) : Promise.resolve(),
       special.hasChart ? renderCharts(this.previewEl, isDark) : Promise.resolve(),
+      special.hasPlantUML ? renderPlantUML(this.previewEl, isDark) : Promise.resolve(),
+      special.hasAbc ? renderAbc(this.previewEl, isDark) : Promise.resolve(),
       special.hasCode ? renderCodeBlocks(this.previewEl, isDark) : Promise.resolve(),
     ]);
+    setupDiagramToolbars(this.previewEl);
   }
 
   private setRenderStatus(status: 'rendering' | 'ready'): void {

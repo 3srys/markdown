@@ -58,7 +58,7 @@ body[data-theme="system"] {
 
   --text-primary: #1c1917;
   --text-secondary: #57534e;
-  --text-muted: #a8a29e;
+  --text-muted: #71717a;
 
   --accent: #1a7f72;
   --accent-hover: #156b60;
@@ -101,7 +101,7 @@ body[data-theme="dark"],
 
   --text-primary: #e8e6e3;
   --text-secondary: #b5b3af;
-  --text-muted: #706f6b;
+  --text-muted: #9ca3af;
 
   --accent: #4fd1b2;
   --accent-hover: #6ddcc2;
@@ -146,7 +146,7 @@ body[data-theme="dark"],
 
     --text-primary: #e8e6e3;
     --text-secondary: #b5b3af;
-    --text-muted: #706f6b;
+    --text-muted: #9ca3af;
 
     --accent: #4fd1b2;
     --accent-hover: #6ddcc2;

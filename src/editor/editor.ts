@@ -291,6 +291,16 @@ export class MarkdownEditor {
     );
   }
 
+  public insertRaw(text: string): void {
+    const start = this.textarea.selectionStart;
+    const end = this.textarea.selectionEnd;
+    const value = this.textarea.value;
+    // Ensure we start on a new line if not already
+    const prefix = start > 0 && value[start - 1] !== '\n' ? '\n' : '';
+    const suffix = '\n';
+    this.replaceText(start, end, prefix + text + suffix, start + prefix.length + text.length + suffix.length);
+  }
+
   public applyFormat(format: string): void {
     const start = this.textarea.selectionStart;
     const end = this.textarea.selectionEnd;

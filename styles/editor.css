@@ -24,7 +24,6 @@
   user-select: none;
   overflow: hidden;
   white-space: pre-line;
-  opacity: 0.75;
   transition: opacity var(--transition-fast);
 }
 
@@ -54,9 +53,6 @@
   scrollbar-color: var(--border-subtle) transparent;
 }
 
-.editor-textarea::selection {
-  background: rgba(26, 127, 114, 0.2);
-}
 
 /* No-wrap mode */
 .editor-container.nowrap .editor-textarea {

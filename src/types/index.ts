@@ -22,5 +22,7 @@ export interface SpecialBlocks {
   hasChart: boolean;
   hasMath: boolean;
   hasCode: boolean;
+  hasPlantUML: boolean;
+  hasAbc: boolean;
 }
 

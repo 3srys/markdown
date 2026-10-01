@@ -1,6 +1,7 @@
 import { MarkdownEditor } from '../editor/editor';
 import { appState } from '../state';
 import { showToast } from '../ui/layout';
+import { showDangerConfirm } from '../ui/dialog';
 import { DEFAULT_DOCUMENT } from '../storage/local-storage';
 
 export function setupFileHandlers(editor: MarkdownEditor, getRenderedHtml: () => string): void {
@@ -15,12 +16,16 @@ function setupNewDocument(editor: MarkdownEditor): void {
   const btnNew = document.getElementById('btn-new');
   if (!btnNew) return;
 
-  btnNew.addEventListener('click', (e) => {
+  btnNew.addEventListener('click', async (e) => {
     e.preventDefault();
     const current = editor.getValue();
     if (current.trim().length > 0) {
-      const confirmClear = window.confirm('Start a new document? Unsaved changes will be cleared.');
-      if (!confirmClear) return;
+      const ok = await showDangerConfirm(
+        'Start a new document? All unsaved changes will be lost.',
+        'New Document',
+        'Discard & New'
+      );
+      if (!ok) return;
     }
 
     editor.setValue('');
@@ -36,12 +41,14 @@ function setupResetDocument(editor: MarkdownEditor): void {
   const btnReset = document.getElementById('btn-reset');
   if (!btnReset) return;
 
-  btnReset.addEventListener('click', (e) => {
+  btnReset.addEventListener('click', async (e) => {
     e.preventDefault();
-    const confirmReset = window.confirm(
-      'Reset editor to the default sample guide? Any current unsaved changes will be replaced.'
+    const ok = await showDangerConfirm(
+      'Reset the editor to the default sample guide? Any unsaved changes will be replaced.',
+      'Reset Editor',
+      'Reset'
     );
-    if (!confirmReset) return;
+    if (!ok) return;
 
     editor.setValue(DEFAULT_DOCUMENT);
     appState.setContent(DEFAULT_DOCUMENT);

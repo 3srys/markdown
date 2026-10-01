@@ -19,9 +19,9 @@ function bootstrap(): void {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootstrap);
+  document.addEventListener('DOMContentLoaded', () => setTimeout(bootstrap, 0));
 } else {
-  bootstrap();
+  setTimeout(bootstrap, 0);
 }
 
 

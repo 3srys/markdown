@@ -549,6 +549,56 @@
   }
 }
 
+/* Diagram Export Toolbars */
+.diagram-container {
+  position: relative;
+  overflow: hidden;
+}
+.diagram-toolbar {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 4px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+.diagram-container:hover .diagram-toolbar {
+  opacity: 1;
+}
+.btn-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.btn-tool:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.btn-tool svg {
+  margin-right: 2px;
+}
+.diagram-img, .abc-render-target {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
 /* Print Stylesheet */
 @media print {
   body {
