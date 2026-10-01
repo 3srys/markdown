@@ -96,15 +96,15 @@
 
       <!-- Desktop View Switcher -->
       <div class="btn-group desktop-view-tabs" role="tablist" aria-label="Layout View">
-        <button id="view-split" class="btn active" title="Split View (Ctrl+Alt+S)" aria-label="Split View">
+        <button id="view-split" class="btn active" role="tab" aria-selected="true" tabindex="0" aria-controls="editor-pane preview-pane" title="Split View (Ctrl+Alt+S)" aria-label="Split View">
           <i data-lucide="columns-2"></i>
           <span class="btn-label">Split</span>
         </button>
-        <button id="view-editor" class="btn" title="Editor Only" aria-label="Editor Only">
+        <button id="view-editor" class="btn" role="tab" aria-selected="false" tabindex="-1" aria-controls="editor-pane" title="Editor Only" aria-label="Editor Only">
           <i data-lucide="edit-3"></i>
           <span class="btn-label">Editor</span>
         </button>
-        <button id="view-preview" class="btn" title="Preview Only" aria-label="Preview Only">
+        <button id="view-preview" class="btn" role="tab" aria-selected="false" tabindex="-1" aria-controls="preview-pane" title="Preview Only" aria-label="Preview Only">
           <i data-lucide="eye"></i>
           <span class="btn-label">Preview</span>
         </button>
@@ -112,8 +112,8 @@
 
       <!-- Mobile View Switcher (visible on mobile screens) -->
       <div class="btn-group mobile-view-tabs" role="tablist" aria-label="View Mode">
-        <button id="tab-editor" class="btn active" role="tab" aria-selected="true" aria-controls="editor-pane">Editor</button>
-        <button id="tab-preview" class="btn" role="tab" aria-selected="false" aria-controls="preview-pane">Preview</button>
+        <button id="tab-editor" class="btn active" role="tab" aria-selected="true" tabindex="0" aria-controls="editor-pane">Editor</button>
+        <button id="tab-preview" class="btn" role="tab" aria-selected="false" tabindex="-1" aria-controls="preview-pane">Preview</button>
       </div>
 
       <!-- Action Buttons -->
@@ -136,7 +136,7 @@
 
         <!-- Export Dropdown -->
         <div class="dropdown" id="export-dropdown">
-          <button class="btn btn-primary" id="btn-export-toggle" aria-haspopup="true" aria-expanded="false" title="Export &amp; Share">
+          <button class="btn btn-primary" id="btn-export-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="export-menu" title="Export &amp; Share">
             <i data-lucide="download"></i>
             <span class="btn-label">Export</span>
             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
@@ -240,7 +240,7 @@
       </section>
 
       <!-- Split Gutter (Desktop) -->
-      <div class="gutter" id="gutter" title="Drag to resize panes" role="separator" aria-orientation="vertical" tabindex="0">
+      <div class="gutter" id="gutter" title="Drag to resize panes" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Resize editor and preview panes" aria-valuenow="50" aria-valuemin="15" aria-valuemax="85" aria-controls="editor-pane preview-pane">
         <div class="gutter-handle-bar"></div>
       </div>
 
@@ -325,7 +325,7 @@
         </div>
         <div class="modal-body diagram-modal-body">
           <aside class="diagram-sidebar">
-            <nav class="diagram-nav" id="diagram-nav">
+            <nav class="diagram-nav" id="diagram-nav" aria-label="Diagram Categories">
               <!-- Populated via JS -->
             </nav>
           </aside>

@@ -12,6 +12,8 @@ function getOrCreateDialogEl(): HTMLElement {
   el.className = 'custom-dialog-backdrop';
   el.setAttribute('role', 'dialog');
   el.setAttribute('aria-modal', 'true');
+  el.setAttribute('aria-labelledby', 'custom-dialog-title');
+  el.setAttribute('aria-describedby', 'custom-dialog-message');
   el.innerHTML = `
     <div class="custom-dialog-card" id="custom-dialog-card">
       <div class="custom-dialog-icon" id="custom-dialog-icon"></div>

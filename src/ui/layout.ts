@@ -32,37 +32,78 @@ export function setupLayout(): void {
 }
 
 function setupDesktopViewTabs(): void {
-  const btnSplit = document.getElementById('view-split');
-  const btnEditor = document.getElementById('view-editor');
-  const btnPreview = document.getElementById('view-preview');
-  const tabEditor = document.getElementById('tab-editor');
-  const tabPreview = document.getElementById('tab-preview');
+  const btnSplit = document.getElementById('view-split') as HTMLButtonElement | null;
+  const btnEditor = document.getElementById('view-editor') as HTMLButtonElement | null;
+  const btnPreview = document.getElementById('view-preview') as HTMLButtonElement | null;
+  const tabEditor = document.getElementById('tab-editor') as HTMLButtonElement | null;
+  const tabPreview = document.getElementById('tab-preview') as HTMLButtonElement | null;
 
   if (!btnSplit || !btnEditor || !btnPreview) return;
 
-  const setDesktopView = (mode: 'split' | 'editor' | 'preview') => {
+  const tabs: Array<{ btn: HTMLButtonElement; mode: 'split' | 'editor' | 'preview' }> = [
+    { btn: btnSplit, mode: 'split' },
+    { btn: btnEditor, mode: 'editor' },
+    { btn: btnPreview, mode: 'preview' },
+  ];
+
+  const setDesktopView = (mode: 'split' | 'editor' | 'preview', shouldFocus = false) => {
     document.body.setAttribute('data-view', mode);
     document.body.dataset.userExplicitView = 'true';
     appState.setViewMode(mode);
 
-    btnSplit.classList.toggle('active', mode === 'split');
-    btnEditor.classList.toggle('active', mode === 'editor');
-    btnPreview.classList.toggle('active', mode === 'preview');
+    tabs.forEach(({ btn, mode: tabMode }) => {
+      const isActive = tabMode === mode;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
+      if (isActive && shouldFocus) {
+        btn.focus();
+      }
+    });
 
     if (tabEditor && tabPreview) {
       if (mode === 'preview') {
         tabPreview.classList.add('active');
         tabEditor.classList.remove('active');
+        tabPreview.setAttribute('aria-selected', 'true');
+        tabEditor.setAttribute('aria-selected', 'false');
+        tabPreview.setAttribute('tabindex', '0');
+        tabEditor.setAttribute('tabindex', '-1');
       } else {
         tabEditor.classList.add('active');
         tabPreview.classList.remove('active');
+        tabEditor.setAttribute('aria-selected', 'true');
+        tabPreview.setAttribute('aria-selected', 'false');
+        tabEditor.setAttribute('tabindex', '0');
+        tabPreview.setAttribute('tabindex', '-1');
       }
     }
   };
 
-  btnSplit.addEventListener('click', () => setDesktopView('split'));
-  btnEditor.addEventListener('click', () => setDesktopView('editor'));
-  btnPreview.addEventListener('click', () => setDesktopView('preview'));
+  tabs.forEach(({ btn, mode }, idx) => {
+    btn.addEventListener('click', () => setDesktopView(mode));
+
+    btn.addEventListener('keydown', (e: KeyboardEvent) => {
+      let targetIdx = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        targetIdx = (idx + 1) % tabs.length;
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        targetIdx = (idx - 1 + tabs.length) % tabs.length;
+        e.preventDefault();
+      } else if (e.key === 'Home') {
+        targetIdx = 0;
+        e.preventDefault();
+      } else if (e.key === 'End') {
+        targetIdx = tabs.length - 1;
+        e.preventDefault();
+      }
+
+      if (targetIdx !== -1) {
+        setDesktopView(tabs[targetIdx].mode, true);
+      }
+    });
+  });
 }
 
 function setupSplitGutter(): void {
@@ -77,6 +118,7 @@ function setupSplitGutter(): void {
   const savedSplit = appState.getState().paneSplit;
   editorPane.style.flex = `0 0 ${savedSplit}%`;
   previewPane.style.flex = `1 1 ${100 - savedSplit}%`;
+  gutter.setAttribute('aria-valuenow', Math.round(savedSplit).toString());
 
   let isDragging = false;
 
@@ -98,6 +140,7 @@ function setupSplitGutter(): void {
 
     editorPane.style.flex = `0 0 ${percentage}%`;
     previewPane.style.flex = `1 1 ${100 - percentage}%`;
+    gutter.setAttribute('aria-valuenow', Math.round(percentage).toString());
     appState.setPaneSplit(percentage);
   };
 
@@ -117,48 +160,110 @@ function setupSplitGutter(): void {
   gutter.addEventListener('touchstart', onStart, { passive: false });
   window.addEventListener('touchmove', onMove, { passive: false });
   window.addEventListener('touchend', onEnd);
+
+  // Keyboard navigation for focusable separator
+  gutter.addEventListener('keydown', (e: KeyboardEvent) => {
+    const current = appState.getState().paneSplit;
+    let next = current;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      next = Math.max(15, current - 5);
+      e.preventDefault();
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      next = Math.min(85, current + 5);
+      e.preventDefault();
+    } else if (e.key === 'PageDown') {
+      next = Math.max(15, current - 15);
+      e.preventDefault();
+    } else if (e.key === 'PageUp') {
+      next = Math.min(85, current + 15);
+      e.preventDefault();
+    } else if (e.key === 'Home') {
+      next = 15;
+      e.preventDefault();
+    } else if (e.key === 'End') {
+      next = 85;
+      e.preventDefault();
+    } else if (e.key === 'Enter') {
+      next = 50;
+      e.preventDefault();
+    }
+
+    if (next !== current) {
+      editorPane.style.flex = `0 0 ${next}%`;
+      previewPane.style.flex = `1 1 ${100 - next}%`;
+      gutter.setAttribute('aria-valuenow', Math.round(next).toString());
+      appState.setPaneSplit(next);
+    }
+  });
 }
 
 function setupMobileTabs(): void {
-  const tabEditor = document.getElementById('tab-editor');
-  const tabPreview = document.getElementById('tab-preview');
-  const btnSplit = document.getElementById('view-split');
-  const btnEditor = document.getElementById('view-editor');
-  const btnPreview = document.getElementById('view-preview');
+  const tabEditor = document.getElementById('tab-editor') as HTMLButtonElement | null;
+  const tabPreview = document.getElementById('tab-preview') as HTMLButtonElement | null;
+  const btnSplit = document.getElementById('view-split') as HTMLButtonElement | null;
+  const btnEditor = document.getElementById('view-editor') as HTMLButtonElement | null;
+  const btnPreview = document.getElementById('view-preview') as HTMLButtonElement | null;
 
   if (!tabEditor || !tabPreview) return;
 
-  const setView = (mode: 'editor' | 'preview') => {
+  const mobileTabs = [
+    { btn: tabEditor, mode: 'editor' as const },
+    { btn: tabPreview, mode: 'preview' as const },
+  ];
+
+  const setView = (mode: 'editor' | 'preview', shouldFocus = false) => {
     document.body.setAttribute('data-view', mode);
     appState.setViewMode(mode);
 
-    if (mode === 'editor') {
-      tabEditor.classList.add('active');
-      tabEditor.setAttribute('aria-selected', 'true');
-      tabPreview.classList.remove('active');
-      tabPreview.setAttribute('aria-selected', 'false');
-    } else {
-      tabPreview.classList.add('active');
-      tabPreview.setAttribute('aria-selected', 'true');
-      tabEditor.classList.remove('active');
-      tabEditor.setAttribute('aria-selected', 'false');
-    }
+    mobileTabs.forEach(({ btn, mode: tabMode }) => {
+      const isActive = tabMode === mode;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
+      if (isActive && shouldFocus) {
+        btn.focus();
+      }
+    });
 
     if (btnEditor && btnPreview && btnSplit) {
       btnEditor.classList.toggle('active', mode === 'editor');
       btnPreview.classList.toggle('active', mode === 'preview');
       btnSplit.classList.remove('active');
+      btnEditor.setAttribute('aria-selected', String(mode === 'editor'));
+      btnPreview.setAttribute('aria-selected', String(mode === 'preview'));
+      btnSplit.setAttribute('aria-selected', 'false');
+      btnEditor.setAttribute('tabindex', mode === 'editor' ? '0' : '-1');
+      btnPreview.setAttribute('tabindex', mode === 'preview' ? '0' : '-1');
+      btnSplit.setAttribute('tabindex', '-1');
     }
   };
 
-  tabEditor.addEventListener('click', (e) => {
-    e.preventDefault();
-    setView('editor');
-  });
+  mobileTabs.forEach(({ btn, mode }, idx) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      setView(mode);
+    });
 
-  tabPreview.addEventListener('click', (e) => {
-    e.preventDefault();
-    setView('preview');
+    btn.addEventListener('keydown', (e: KeyboardEvent) => {
+      let targetIdx = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        targetIdx = (idx + 1) % mobileTabs.length;
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        targetIdx = (idx - 1 + mobileTabs.length) % mobileTabs.length;
+        e.preventDefault();
+      } else if (e.key === 'Home') {
+        targetIdx = 0;
+        e.preventDefault();
+      } else if (e.key === 'End') {
+        targetIdx = mobileTabs.length - 1;
+        e.preventDefault();
+      }
+
+      if (targetIdx !== -1) {
+        setView(mobileTabs[targetIdx].mode, true);
+      }
+    });
   });
 
   // Handle dynamic screen resize & orientation change
@@ -176,21 +281,30 @@ function setupMobileTabs(): void {
       if (currentMode === 'editor' && !document.body.dataset.userExplicitView) {
         document.body.setAttribute('data-view', 'split');
         appState.setViewMode('split');
-        if (btnSplit) btnSplit.classList.add('active');
-        if (btnEditor) btnEditor.classList.remove('active');
-        if (btnPreview) btnPreview.classList.remove('active');
+        if (btnSplit && btnEditor && btnPreview) {
+          btnSplit.classList.add('active');
+          btnEditor.classList.remove('active');
+          btnPreview.classList.remove('active');
+          btnSplit.setAttribute('aria-selected', 'true');
+          btnEditor.setAttribute('aria-selected', 'false');
+          btnPreview.setAttribute('aria-selected', 'false');
+          btnSplit.setAttribute('tabindex', '0');
+          btnEditor.setAttribute('tabindex', '-1');
+          btnPreview.setAttribute('tabindex', '-1');
+        }
       }
     }
   };
-
-  if (mediaQuery.matches) {
-    setView('editor');
-  }
 
   if (typeof mediaQuery.addEventListener === 'function') {
     mediaQuery.addEventListener('change', handleMediaChange);
   } else if ('addListener' in mediaQuery) {
     (mediaQuery as any).addListener(handleMediaChange);
+  }
+
+  // Initial check on load
+  if (mediaQuery.matches) {
+    setView('editor');
   }
 }
 
@@ -267,6 +381,11 @@ function setupExportDropdown(): void {
 
   if (!dropdown || !toggleBtn) return;
 
+  const closeDropdown = () => {
+    dropdown.classList.remove('open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+  };
+
   toggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.toggle('open');
@@ -276,8 +395,14 @@ function setupExportDropdown(): void {
 
   window.addEventListener('click', (e) => {
     if (!dropdown.contains(e.target as Node)) {
-      dropdown.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
+      closeDropdown();
+    }
+  });
+
+  dropdown.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      closeDropdown();
+      toggleBtn.focus();
     }
   });
 }
